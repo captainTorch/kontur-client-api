@@ -5,9 +5,9 @@ import { PromoCodeType } from './model/PromoCodeType';
 import { Event } from './model/Event';
 import { Order } from './model/Order';
 
-export {User}
-export {Service}
-export {PromoCode}
+export type {User}
+export type {Service}
+export type {PromoCode}
 export {PromoCodeType}
-export {Event}
-export {Order}
+export type {Event}
+export type {Order}
