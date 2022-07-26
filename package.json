@@ -1,0 +1,8 @@
+{
+  "name": "kontur-client-shared",
+  "version": "1.0.0",
+  "description": "Kontur-client API",
+  "main": "index.ts",
+  "author": "https://github.com/captainTorch",
+  "license": "ISC"
+}
