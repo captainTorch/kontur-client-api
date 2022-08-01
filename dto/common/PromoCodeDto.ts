@@ -1,6 +1,6 @@
 import { PromoCodeType } from './PromoCodeType';
 
-export interface PromoCode {
+export interface PromoCodeDto {
   code: string,
   valid: boolean,
   type: PromoCodeType,
