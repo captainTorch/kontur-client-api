@@ -1,4 +1,4 @@
-import { ServiceDto } from './ServiceDto';
+import { ServiceDto } from '../service/ServiceDto';
 
 export interface OrderDto {
   id: number;
