@@ -1,5 +1,5 @@
-import * as api from './api';
+import Api from './api';
 import * as dto from './dto'
 
-export {api}
+export {Api}
 export {dto}
