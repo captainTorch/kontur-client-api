@@ -1,5 +1,5 @@
-import * as services from './services';
+import * as api from './api';
 import * as dto from './dto'
 
-export {services}
+export {api}
 export {dto}

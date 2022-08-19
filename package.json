@@ -1,5 +1,5 @@
 {
-  "name": "kontur-client-shared",
+  "name": "kontur-client-api",
   "version": "1.0.0",
   "description": "Kontur-client API",
   "main": "index.ts",
