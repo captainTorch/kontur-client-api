@@ -11,7 +11,7 @@ export class PaymentService extends ApiService {
   refillCard (
     amount: number,
     paymentGateId: string,
-    callbackUrl: string = `http://${location.host}`
+    callbackUrl = `http://${location.host}`
   ): Promise<RefillCardResponse> {
       return this.post(`/refill-card/${paymentGateId}`, { amount, callbackUrl }) as Promise<RefillCardResponse>
   }
