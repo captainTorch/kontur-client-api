@@ -1,5 +1,5 @@
 import { ApiService } from './ApiService'
-import { ClientDto } from '../dto'
+import { ActivityEventDto, ClientDto } from '../dto'
 
 type ClientAuthParams = {
     username: string,
@@ -8,6 +8,10 @@ type ClientAuthParams = {
 
 export class ClientService extends ApiService {
     module = '/client';
+
+    getActivity (): Promise<ActivityEventDto[]> {
+        return this.get('/activity') as Promise<ActivityEventDto[]>
+    }
 
     checkCard (card: string): Promise<void> {
         return this.post('/check-card', { card }) as Promise<void>
