@@ -1,7 +1,7 @@
-import { ApiService } from './ApiService'
+import { Api } from './Api'
 import { CategoryDto } from '../dto'
 
-export class ServicesService extends ApiService {
+export class ServicesApi extends Api {
   module = '/services'
 
   loadTree (rootCategoryId: number): Promise<CategoryDto> {

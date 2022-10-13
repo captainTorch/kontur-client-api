@@ -1,4 +1,4 @@
-import { ApiService } from './ApiService'
+import { Api } from './Api'
 import { ActivityEventDto, ClientDto } from '../dto'
 
 type ClientAuthParams = {
@@ -6,7 +6,7 @@ type ClientAuthParams = {
     password: string
 }
 
-export class ClientService extends ApiService {
+export class ClientApi extends Api {
     module = '/client';
 
     getActivity (): Promise<ActivityEventDto[]> {

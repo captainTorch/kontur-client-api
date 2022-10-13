@@ -1,17 +1,17 @@
-import { ClientService } from './ClientService';
-import { PaymentService } from './PaymentService';
-import { ServicesService } from './ServicesService';
+import { ClientApi } from './ClientApi';
+import { PaymentApi } from './PaymentApi';
+import { ServicesApi } from './ServicesApi';
 
 export default class {
 
-	public clientService: ClientService;
-	public paymentService: PaymentService;
-	public servicesService: ServicesService;
+	public clientService: ClientApi;
+	public paymentService: PaymentApi;
+	public servicesService: ServicesApi;
 
 	constructor(host: string) {
-		this.clientService = new ClientService(host)
-		this.paymentService = new PaymentService(host)
-		this.servicesService = new ServicesService(host)
+		this.clientService = new ClientApi(host)
+		this.paymentService = new PaymentApi(host)
+		this.servicesService = new ServicesApi(host)
 	}
 
 }

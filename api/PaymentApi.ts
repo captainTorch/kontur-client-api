@@ -1,11 +1,11 @@
-import { ApiService } from './ApiService'
+import { Api } from './Api'
 import { TransactionDto } from '../dto'
 
 export type RefillCardResponse = {
   url: string
 }
 
-export class PaymentService extends ApiService {
+export class PaymentApi extends Api {
   module = '/payment';
 
   refillCard (

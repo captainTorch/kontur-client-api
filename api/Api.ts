@@ -1,4 +1,4 @@
-export abstract class ApiService {
+export abstract class Api {
   protected abstract module: string;
 
   constructor(private host: string) {
