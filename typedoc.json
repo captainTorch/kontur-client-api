@@ -1,0 +1,7 @@
+{
+  "out": "docs",
+  "entryPoints": ["api", "types"],
+  "entryPointStrategy": "expand",
+  "excludeInternal": true,
+  "excludePrivate": true
+}

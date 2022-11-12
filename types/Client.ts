@@ -1,6 +1,6 @@
-import { UserDto } from "./UserDto";
+import { User } from "./User";
 
-export interface ClientDto extends UserDto {
+export type Client = User & {
 	firstName: string;
 	lastName: string;
 	phone: string;

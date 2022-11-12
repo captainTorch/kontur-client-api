@@ -1,4 +1,4 @@
-export interface UserDto {
+export type User = {
 	id: number;
 	registered: Date
 }

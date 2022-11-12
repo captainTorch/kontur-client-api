@@ -1,12 +1,51 @@
 {
   "name": "kontur-client-api",
   "version": "1.0.0",
-  "description": "Kontur-client API",
+  "description": "Kontur-client API package",
   "main": "index.ts",
   "author": "https://github.com/captainTorch",
   "license": "ISC",
+  "scripts": {
+    "docs": "typedoc --options typedoc.json"
+  },
+  "eslintConfig": {
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+      "project": "tsconfig.json"
+    },
+    "plugins": [
+      "@typescript-eslint",
+      "jsdoc"
+    ],
+    "extends": [
+      "eslint:recommended",
+      "plugin:@typescript-eslint/eslint-recommended",
+      "plugin:@typescript-eslint/recommended",
+      "plugin:jsdoc/recommended"
+    ],
+    "rules": {
+      "jsdoc/require-jsdoc": [
+        "error",
+        {
+          "require": {
+            "FunctionDeclaration": true,
+            "MethodDefinition": true,
+            "ClassDeclaration": true,
+            "FunctionExpression": true,
+            "ArrowFunctionExpression": false
+          }
+        }
+      ]
+    }
+  },
+  "eslintIgnore": [
+    "node_modules"
+  ],
   "devDependencies": {
-    "@typescript-eslint/parser": "^5.31.0",
-    "@typescript-eslint/eslint-plugin": "^5.31.0"
+    "@typescript-eslint/eslint-plugin": "^5.42.0",
+    "@typescript-eslint/parser": "^5.42.0",
+    "eslint": "^8.27.0",
+    "eslint-plugin-jsdoc": "^39.6.2",
+    "typedoc": "^0.23.20"
   }
 }
