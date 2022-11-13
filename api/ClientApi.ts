@@ -1,5 +1,5 @@
 import { Api } from './Api'
-import { Client } from '../types'
+import { Client, Transaction } from "../types";
 
 /**
  * Содержит методы для получения и обновления информации о клиенте
@@ -47,18 +47,27 @@ export class ClientApi extends Api {
      * @returns {Promise<Client>} Авторизованный клиент
      */
     getAuthorized (): Promise<Client> {
-        return new Promise((resolve) => {
-            resolve({
-                id: 1,
-                firstName: 'Джон',
-                lastName: 'Коннор',
-                phone: '88005553535',
-                email: 'for-shit@bk.ru',
-                card: '123123',
-                registered: new Date()
-            })
-        })
-        //return this.get('/authorized') as Promise<Client>
+        // return new Promise((resolve) => {
+        //     resolve({
+        //         id: 1,
+        //         firstName: 'Джон',
+        //         lastName: 'Коннор',
+        //         phone: '88005553535',
+        //         email: 'for-shit@bk.ru',
+        //         card: '123123',
+        //         registered: new Date()
+        //     })
+        // })
+        return this.get('/authorized') as Promise<Client>
+    }
+
+    /**
+     * Возвращает все транзакции текущего авторизованного клиента
+     *
+     * @returns {Promise<Transaction[]>} Список транзакций
+     */
+    getTransactions (): Promise<Transaction[]> {
+        return this.get('/transactions') as Promise<Transaction[]>
     }
 
     /**
