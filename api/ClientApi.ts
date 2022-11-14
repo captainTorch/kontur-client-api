@@ -47,17 +47,6 @@ export class ClientApi extends Api {
      * @returns {Promise<Client>} Авторизованный клиент
      */
     getAuthorized (): Promise<Client> {
-        // return new Promise((resolve) => {
-        //     resolve({
-        //         id: 1,
-        //         firstName: 'Джон',
-        //         lastName: 'Коннор',
-        //         phone: '88005553535',
-        //         email: 'for-shit@bk.ru',
-        //         card: '123123',
-        //         registered: new Date()
-        //     })
-        // })
         return this.get('/authorized') as Promise<Client>
     }
 
