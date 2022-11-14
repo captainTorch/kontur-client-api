@@ -1,5 +1,5 @@
 import { Api } from './Api'
-import { Client, Transaction } from "../types";
+import { Client, ClientBalance, ClientCard, Transaction } from "../types";
 
 /**
  * Содержит методы для получения и обновления информации о клиенте
@@ -57,6 +57,24 @@ export class ClientApi extends Api {
      */
     getTransactions (): Promise<Transaction[]> {
         return this.get('/transactions') as Promise<Transaction[]>
+    }
+
+    /**
+     * Возвращает список карт, привязанных к аккаунту текущего авторизованного пользователя
+     *
+     * @returns {Promise<ClientCard[]>} список карт
+     */
+    getCards (): Promise<ClientCard[]> {
+        return this.get('/cards') as Promise<ClientCard[]>
+    }
+
+    /**
+     * Возвращает счета текущего авторизованного пользователя, сгруппированные по валютам
+     *
+     * @returns {Promise<ClientBalance[]>} список счетов
+     */
+    getBalance (): Promise<ClientBalance[]> {
+        return this.get('/balance') as Promise<ClientBalance[]>
     }
 
     /**
