@@ -5,5 +5,5 @@ export type Client = User & {
 	lastName: string;
 	phone: string;
 	email: string | null;
-	card: string;
+	konturId: string;
 }
