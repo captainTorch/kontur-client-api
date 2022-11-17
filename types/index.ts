@@ -8,9 +8,11 @@ import {Transaction} from './Transaction';
 import {ActivityEvent} from './ActivityEvent';
 import {TransactionStatus} from './TransactionStatus';
 import {ActivityEventType} from './ActivityEventType';
+import {Gender} from './common/Gender';
 
 export {TransactionStatus}
 export {ActivityEventType}
+export {Gender}
 
 export type {
   User,
