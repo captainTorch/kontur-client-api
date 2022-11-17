@@ -49,10 +49,48 @@ export type SignUpWithCardParams = {
 }
 
 /**
+ * Параметры запроса для {@link ClientApi#authWithCode}
+ */
+export type AuthWithCodeParams = {
+    phone: number;
+    code: number;
+}
+
+/**
+ * Параметры запроса для {@link ClientApi#getAuthCode}
+ */
+export type GetAuthCodeParams = {
+    /**
+     * Номер телефона, на который будет отправлен проверочный код
+     */
+    phone: number
+}
+
+/**
+ * Параметры ответа на успешный запрос авторизации
+ */
+export type AccessTokenResponse = {
+    /**
+     * JWT токен для аутентификации пользователя
+     */
+    accessToken: string;
+}
+
+/**
  * Содержит методы для получения и обновления информации о клиенте
  */
 export class ClientApi extends Api {
     module = '/client';
+
+    /**
+     * Позволяет получить проверочный код для авторизации по номеру телефона
+     *
+     * @param {GetAuthCodeParams} params Номер телефона
+     * @returns {string} Проверочный код
+     */
+    getAuthCode (params: GetAuthCodeParams): Promise<number> {
+        return this.post('/auth-code', params) as Promise<number>
+    }
 
     /**
      * Позволяет проверить, зарегистрирована ли карта с номером в системе Контур
@@ -93,10 +131,21 @@ export class ClientApi extends Api {
      * @param {string} password Пароль
      * @returns {Promise<Client>} Авторизованный клиент
      */
-    authorize (username: string, password: string): Promise<Client> {
-        return (this.post('/auth', {username, password}) as Promise<{ accessToken: string }>)
-            .then(({ accessToken }) => localStorage.setItem('accessToken', accessToken))
-            .then(() => this.getAuthorized())
+    async authWithPassword (username: string, password: string): Promise<Client> {
+        const token = await this.post('/auth', {username, password}) as AccessTokenResponse;
+        return this.setTokenAndGetAuthorized(token);
+    }
+
+    /**
+     * При совпадении ранее высланного на номер кода (см. {@link ClientApi#getAuthCode}) открывает сессию
+     * В случае, если аккаунта с данным номером телефона еще нет в базе, создает новый аккаунт
+     *
+     * @param {AuthWithCodeParams} params Номер телефона и код
+     * @returns {Promise<Client>} Авторизованный клиент
+     */
+    async authWithCode (params: AuthWithCodeParams): Promise<Client> {
+        const token = await this.post('/auth-with-code', params) as AccessTokenResponse
+        return this.setTokenAndGetAuthorized(token);
     }
 
     /**
@@ -138,7 +187,17 @@ export class ClientApi extends Api {
     /**
      * Завершает сессию пользователя
      */
-    public logOut (): void {
+    logOut (): void {
         localStorage.removeItem('accessToken')
+    }
+
+    /**
+     * @internal
+     * @param {AccessTokenResponse} params Ответ на запрос авторизации
+     * @returns {Promise<Client>} Авторизованный пользователь
+     */
+    private async setTokenAndGetAuthorized({ accessToken }: AccessTokenResponse): Promise<Client> {
+        localStorage.setItem('accessToken', accessToken);
+        return this.getAuthorized();
     }
 }
