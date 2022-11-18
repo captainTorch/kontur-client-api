@@ -171,8 +171,18 @@ export class ClientApi extends Api {
      *
      * @returns {Promise<ClientCard[]>} список карт
      */
-    getCards (): Promise<ClientCard[]> {
-        return this.get('/cards') as Promise<ClientCard[]>
+    getAccounts (): Promise<unknown[]> {
+        return this.get('/accounts') as Promise<unknown[]>
+    }
+
+    /**
+     * Привязывает существующий аккаунт Контура к аккаунту клиента
+     *
+     * @param {string} card Номер карты, привязанной к аккаунту
+     * @returns {Promise<void>}
+     */
+    attachAccount (card: string): Promise<void> {
+        return this.get(`/accounts/add/${card}`) as Promise<void>
     }
 
     /**
