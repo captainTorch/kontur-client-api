@@ -89,7 +89,7 @@ export class ClientApi extends Api {
      * @returns {string} Проверочный код
      */
     getAuthCode (params: GetAuthCodeParams): Promise<number> {
-        return this.post('/auth-code', params) as Promise<number>
+        return this.post('/get-auth-code', params) as Promise<number>
     }
 
     /**
