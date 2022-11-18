@@ -1,5 +1,4 @@
 import { Api } from './Api'
-import { Transaction } from "../types"
 
 export type RefillCardResponse = {
   url: string
@@ -25,15 +24,5 @@ export class PaymentApi extends Api {
     callbackUrl = `http://${location.host}`
   ): Promise<RefillCardResponse> {
       return this.post(`/refill-card/${paymentGateId}`, { amount, callbackUrl }) as Promise<RefillCardResponse>
-  }
-
-  /**
-   * Возвращает информацию о платеже
-   *
-   * @param {string} transactionId инентификатор платежа
-   * @returns {Promise<Transaction>} платеж
-   */
-  getTransaction (transactionId: string): Promise<Transaction> {
-      return this.get(`/transaction/${transactionId}`) as Promise<Transaction>
   }
 }

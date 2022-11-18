@@ -1,26 +1,28 @@
 import {User} from './User';
 import {Client} from './Client';
-import {ClientCard} from './ClientCard';
-import {ClientBalance} from './ClientBalance';
+
+import {KonturAccount} from './KonturAccount';
+import {KonturAccountCard} from "./KonturAccountCard";
+import {KonturAccountBalance} from './KonturAccountBalance';
+import {KonturAccountTransaction} from "./KonturAccountTransaction";
+
 import {Service} from './Service';
 import {Category} from './Category';
-import {Transaction} from './Transaction';
 import {ActivityEvent} from './ActivityEvent';
-import {TransactionStatus} from './TransactionStatus';
 import {ActivityEventType} from './ActivityEventType';
 import {Gender} from './common/Gender';
 
-export {TransactionStatus}
 export {ActivityEventType}
 export {Gender}
 
 export type {
   User,
   Client,
-  ClientCard,
-  ClientBalance,
+  KonturAccount,
+  KonturAccountCard,
+  KonturAccountBalance,
+  KonturAccountTransaction,
   Category,
   Service,
-  Transaction,
   ActivityEvent
 }

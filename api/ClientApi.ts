@@ -1,5 +1,5 @@
 import { Api } from './Api'
-import { Client, ClientBalance, ClientCard, Gender, Transaction } from "../types";
+import { Client, Gender, KonturAccount } from "../types";
 
 /**
  * Параметры запроса для {@link ClientApi#signUp | создания клиента}
@@ -158,21 +158,12 @@ export class ClientApi extends Api {
     }
 
     /**
-     * Возвращает все транзакции текущего авторизованного клиента
+     * Возвращает список аккаунтов Контур, привязанных к аккаунту текущего авторизованного пользователя
      *
-     * @returns {Promise<Transaction[]>} Список транзакций
+     * @returns {Promise<KonturAccount[]>} список карт
      */
-    getTransactions (): Promise<Transaction[]> {
-        return this.get('/transactions') as Promise<Transaction[]>
-    }
-
-    /**
-     * Возвращает список карт, привязанных к аккаунту текущего авторизованного пользователя
-     *
-     * @returns {Promise<ClientCard[]>} список карт
-     */
-    getAccounts (): Promise<unknown[]> {
-        return this.get('/accounts') as Promise<unknown[]>
+    getAccounts (): Promise<KonturAccount[]> {
+        return this.get('/accounts') as Promise<KonturAccount[]>
     }
 
     /**
@@ -183,15 +174,6 @@ export class ClientApi extends Api {
      */
     attachAccount (card: string): Promise<void> {
         return this.get(`/accounts/add/${card}`) as Promise<void>
-    }
-
-    /**
-     * Возвращает счета текущего авторизованного пользователя, сгруппированные по валютам
-     *
-     * @returns {Promise<ClientBalance[]>} список счетов
-     */
-    getBalance (): Promise<ClientBalance[]> {
-        return this.get('/balance') as Promise<ClientBalance[]>
     }
 
     /**
