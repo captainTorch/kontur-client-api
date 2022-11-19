@@ -1,5 +1,12 @@
 import { Api } from './Api'
 
+export type RefillCardParams = {
+  amount: number,
+  currency: string,
+  accountId: string
+  callbackUrl: string
+}
+
 export type RefillCardResponse = {
   url: string
 }
@@ -13,16 +20,11 @@ export class PaymentApi extends Api {
   /**
    * Пополняет карту клиента на указанную сумму (в рублях)
    *
-   * @param {number} amount сумма пополнения
-   * @param {string} paymentGateId платежного шлюза
-   * @param {string} callbackUrl URL для перехода после платежа
+   * @param {RefillCardParams} params данные о карте и платеже
+   * @param {string} paymentGateId ID платежного шлюза
    * @returns {Promise} HTTP response
    */
-  refillCard (
-    amount: number,
-    paymentGateId: string,
-    callbackUrl = `http://${location.host}`
-  ): Promise<RefillCardResponse> {
-      return this.post(`/refill-card/${paymentGateId}`, { amount, callbackUrl }) as Promise<RefillCardResponse>
+  refillCard (params: RefillCardParams, paymentGateId: string): Promise<RefillCardResponse> {
+      return this.post(`/refill-card/${paymentGateId}`, params) as Promise<RefillCardResponse>
   }
 }

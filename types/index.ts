@@ -6,12 +6,15 @@ import {KonturAccountCard} from "./KonturAccountCard";
 import {KonturAccountBalance} from './KonturAccountBalance';
 import {KonturAccountTransaction} from "./KonturAccountTransaction";
 
+import {TransactionStatus} from './TransactionStatus';
+
 import {Service} from './Service';
 import {Category} from './Category';
 import {ActivityEvent} from './ActivityEvent';
 import {ActivityEventType} from './ActivityEventType';
 import {Gender} from './common/Gender';
 
+export {TransactionStatus}
 export {ActivityEventType}
 export {Gender}
 
