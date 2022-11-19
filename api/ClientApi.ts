@@ -76,6 +76,23 @@ export type AccessTokenResponse = {
     accessToken: string;
 }
 
+export type CreateAccountParams = {
+    name: string
+}
+
+export type AttachAccountParams = {
+    name: string,
+    code: string
+}
+
+export type StoredPhoneCode = {
+   phone: number,
+   timeout: number,
+   timestamp: number
+}
+
+const LOCAL_STORAGE_PHONES_KEY = 'checkedPhones';
+
 /**
  * Содержит методы для получения и обновления информации о клиенте
  */
@@ -83,13 +100,19 @@ export class ClientApi extends Api {
     module = '/client';
 
     /**
-     * Позволяет получить проверочный код для авторизации по номеру телефона
+     * В зависимости от настроек сервера отправляет SMS на указанный номер либо
+     * совершает звонок-сброс для подтверждения какого-либо действия пользователя
      *
      * @param {GetAuthCodeParams} params Номер телефона
-     * @returns {string} Проверочный код
+     * @returns {Promise<number>} Время жизни кода в секундах
      */
-    getAuthCode (params: GetAuthCodeParams): Promise<number> {
-        return this.post('/get-auth-code', params) as Promise<number>
+    async getAuthCode (params: GetAuthCodeParams): Promise<StoredPhoneCode> {
+        const existing = this.getSentCodes().find(v => v.phone === params.phone);
+        if (existing) {
+            throw new Error(`Please, wait for ${existing.timeout} secs to send code again`);
+        }
+        const timeout = await this.post('/get-auth-code', params) as number;
+        return this.setCodeSent(params.phone, timeout);
     }
 
     /**
@@ -167,13 +190,23 @@ export class ClientApi extends Api {
     }
 
     /**
-     * Привязывает существующий аккаунт Контура к аккаунту клиента
+     * Привязывает новый аккаунт Контура к аккаунту клиента
      *
-     * @param {string} card Номер карты, привязанной к аккаунту
+     * @param {CreateAccountParams} params Имя карты
      * @returns {Promise<void>}
      */
-    attachAccount (card: string): Promise<void> {
-        return this.get(`/accounts/add/${card}`) as Promise<void>
+    createAccount (params: CreateAccountParams): Promise<void> {
+        return this.post('/accounts/create', params) as Promise<void>
+    }
+
+    /**
+     * Привязывает существующий аккаунт Контура к аккаунту клиента
+     *
+     * @param {AttachAccountParams} params Номер и имя карты
+     * @returns {Promise<void>}
+     */
+    attachAccount (params: AttachAccountParams): Promise<void> {
+        return this.post('/accounts/attach', params) as Promise<void>
     }
 
     /**
@@ -191,5 +224,45 @@ export class ClientApi extends Api {
     private async setTokenAndGetAuthorized({ accessToken }: AccessTokenResponse): Promise<Client> {
         localStorage.setItem('accessToken', accessToken);
         return this.getAuthorized();
+    }
+
+    /**
+     * Возвращает сохраненные данные о телефонах, на которые высланы коды подтверждения
+     *
+     * @returns {StoredPhoneCode[]} Сохраненные данные
+     */
+    public getSentCodes(): StoredPhoneCode[] {
+        try {
+            return JSON.parse(localStorage.getItem(LOCAL_STORAGE_PHONES_KEY) as string) || []
+        } catch (e) {
+            return [];
+        }
+    }
+
+    /**
+     * @param {number} phone Номер телефона
+     * @param {number} timeout Время до следующего запроса кода
+     * @returns {StoredPhoneCode} Сохраненные данные
+     * @internal
+     */
+    private setCodeSent(phone: number, timeout: number): StoredPhoneCode {
+        const code = {
+            phone,
+            timeout,
+            timestamp: new Date().getTime()
+        }
+        this.saveSentCodes([...this.getSentCodes(), code]);
+        setTimeout(() => this.saveSentCodes(
+          this.getSentCodes().filter(p => p.phone !== phone)
+        ), timeout * 1000);
+        return code;
+    }
+
+    /**
+     * @param {StoredPhoneCode} phones Сохраняет номера в localStorage
+     * @internal
+     */
+    private saveSentCodes(phones: StoredPhoneCode[]): void {
+        localStorage.setItem(LOCAL_STORAGE_PHONES_KEY, JSON.stringify(phones));
     }
 }
