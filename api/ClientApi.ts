@@ -1,5 +1,6 @@
 import { Api } from './Api'
 import { Client, Gender, KonturAccount } from "../types";
+import { PaymentParams } from "./PaymentApi";
 
 /**
  * Параметры запроса для {@link ClientApi#signUp | создания клиента}
@@ -83,6 +84,12 @@ export type CreateAccountParams = {
 export type AttachAccountParams = {
     name: string,
     code: string
+}
+
+export type CreateRefilledAccountParams = Partial<CreateAccountParams & PaymentParams>
+
+export type AccountResponse = {
+    accountId: string
 }
 
 export type StoredPhoneCode = {
@@ -195,8 +202,24 @@ export class ClientApi extends Api {
      * @param {CreateAccountParams} params Имя карты
      * @returns {Promise<void>}
      */
-    createAccount (params: CreateAccountParams): Promise<unknown> {
-        return this.post('/accounts/create', params) as Promise<unknown>
+    createAccount (params: CreateAccountParams): Promise<AccountResponse> {
+        return this.post('/accounts/create', params) as Promise<AccountResponse>
+    }
+
+    /**
+     * Создает новый аккаунт Контура и привязывает его к аккаунту клиента
+     * При успешном создании аккаунта создает в нем карту и перенаправляет пользователя
+     * на платежный шлюз
+     *
+     * @param {CreateRefilledAccountParams} params Параметры запроса
+     * @param {string} paymentGateId Идентификатор платежного шлюза
+     * @returns {Promise<PaymentResponse>} URL для перенаправления на оплату
+     */
+    createRefilledAccount (
+      params: CreateRefilledAccountParams,
+      paymentGateId: string
+    ): Promise<PaymentResponse> {
+        return this.post(`/accounts/create-refilled/${paymentGateId}`, params) as Promise<PaymentResponse>
     }
 
     /**
