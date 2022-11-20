@@ -195,8 +195,8 @@ export class ClientApi extends Api {
      * @param {CreateAccountParams} params Имя карты
      * @returns {Promise<void>}
      */
-    createAccount (params: CreateAccountParams): Promise<void> {
-        return this.post('/accounts/create', params) as Promise<void>
+    createAccount (params: CreateAccountParams): Promise<unknown> {
+        return this.post('/accounts/create', params) as Promise<unknown>
     }
 
     /**
@@ -205,8 +205,8 @@ export class ClientApi extends Api {
      * @param {AttachAccountParams} params Номер и имя карты
      * @returns {Promise<void>}
      */
-    attachAccount (params: AttachAccountParams): Promise<void> {
-        return this.post('/accounts/attach', params) as Promise<void>
+    attachAccount (params: AttachAccountParams): Promise<unknown> {
+        return this.post('/accounts/attach', params) as Promise<unknown>
     }
 
     /**
