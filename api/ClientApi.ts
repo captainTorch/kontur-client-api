@@ -187,6 +187,17 @@ export class ClientApi extends Api {
         return this.get('/authorized') as Promise<Client>
     }
 
+    
+    /**
+     * Позволяет изменить данные о клиенте в системе
+     *
+     * @param {Partial<Client>} params Обновленные данные пользователя
+     * @returns {Promise<void>}
+     */
+    update(params: Partial<Client>): Promise<void> {
+        return this.post('/update', params) as Promise<void>
+    }
+
     /**
      * Возвращает список аккаунтов Контур, привязанных к аккаунту текущего авторизованного пользователя
      *
