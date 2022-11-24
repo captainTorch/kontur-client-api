@@ -256,6 +256,7 @@ export class ClientApi extends Api {
      * @returns {Promise<Client>} Авторизованный пользователь
      */
     private async setTokenAndGetAuthorized({ accessToken }: AccessTokenResponse): Promise<Client> {
+        localStorage.removeItem(LOCAL_STORAGE_PHONES_KEY)
         localStorage.setItem('accessToken', accessToken);
         return this.getAuthorized();
     }

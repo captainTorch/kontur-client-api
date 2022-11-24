@@ -1,5 +1,11 @@
+import { TransactionStatus } from "./TransactionStatus";
+
 export type KonturAccountTransaction = {
-  id: string,
+  id?: string,
+  konturId?: string,
+  paymentGateId?: string,
+
   date: Date,
-  amount: number
+  amount: number,
+  status: TransactionStatus
 }
