@@ -1,6 +1,6 @@
 import { Api } from './Api'
 import { Client, Gender, KonturAccount } from "../types";
-import { PaymentParams } from "./PaymentApi";
+import { PaymentResponse } from "./PaymentApi";
 
 /**
  * Параметры запроса для {@link ClientApi#signUp | создания клиента}
@@ -78,15 +78,20 @@ export type AccessTokenResponse = {
 }
 
 export type CreateAccountParams = {
-    name: string
+    name: string,
+    isMutable?: boolean,
+    isRefillable?: boolean
 }
 
-export type AttachAccountParams = {
-    name: string,
+export type AttachAccountParams = CreateAccountParams & {
     code: string
 }
 
-export type CreateRefilledAccountParams = Partial<CreateAccountParams & PaymentParams>
+export type CreateRefilledAccountParams = CreateAccountParams & {
+    amount: number,
+    currency: string,
+    callbackUrl: string
+}
 
 export type AccountResponse = {
     accountId: string

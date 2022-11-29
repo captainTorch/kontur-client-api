@@ -7,5 +7,10 @@ export type KonturAccountTransaction = {
 
   date: Date,
   amount: number,
+  currency: string,
   status: TransactionStatus
+
+  // TODO получилось два типа для KonturAccount. Один из конвертера, второй просто сериализованный entity
+  // Подумать, как избежать этой ситуации
+  account?: unknown
 }

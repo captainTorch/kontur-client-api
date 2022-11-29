@@ -5,6 +5,8 @@ import { KonturAccountTransaction } from "./KonturAccountTransaction";
 export type KonturAccount = {
   id: string;
   name: string;
+  isMutable: boolean,
+  isRefillable: boolean,
   cards: KonturAccountCard[];
   balance: KonturAccountBalance[];
   transactions: KonturAccountTransaction[];
