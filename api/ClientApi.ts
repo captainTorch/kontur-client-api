@@ -54,7 +54,7 @@ export type SignUpWithCardParams = {
  */
 export type AuthWithCodeParams = {
     phone: number;
-    code: number;
+    code: string;
 }
 
 /**
@@ -110,6 +110,16 @@ const LOCAL_STORAGE_PHONES_KEY = 'checkedPhones';
  */
 export class ClientApi extends Api {
     module = '/client';
+
+    /**
+     * Позволяет определить, существует ли аккаунт, привязанный к данному номеру
+     *
+     * @param {string} phone Номер телефона
+     * @returns {Promise<boolean>} true, если клиент зарегистрирован
+     */
+    checkIfClientExists (phone: string): Promise<boolean> {
+        return this.post('/exists-with-phone', { phone }) as Promise<boolean>
+    }
 
     /**
      * В зависимости от настроек сервера отправляет SMS на указанный номер либо
