@@ -25,8 +25,8 @@ export class PaymentApi extends Api {
    * @param {string} paymentGateId ID платежного шлюза
    * @returns {Promise<PaymentResponse>} URL для перенаправления на платежный шлюз
    */
-  pay (params: PaymentParams, paymentGateId: string): Promise<PaymentResponse> {
-      return this.post(`/refill-card/${paymentGateId}`, params) as Promise<PaymentResponse>
+  requestPaymentForm (params: PaymentParams, paymentGateId: string): Promise<PaymentResponse> {
+      return this.post(`/request-payment-form/${paymentGateId}`, params) as Promise<PaymentResponse>
   }
 
   /**
