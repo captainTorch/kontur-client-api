@@ -7,9 +7,13 @@ export const enum TransactionStatus {
    */
   CREATED = 'CREATED',
   /**
-   * Производится запрос платежного шлюза
+   * Производится запрос платежного шлюза для ввода данных пользователем
    */
   AWAITING_FOR_PAYMENT_GATE = 'PG_AWAITING',
+  /**
+   * Данные на стороне клиента введены, платеж обрабатывается шлюзом
+   */
+  EXECUTING_BY_PAYMENT_GATE = 'PG_EXECUTING',
   /**
    * Устанавливается по умолчанию при создании платежа.
    */
