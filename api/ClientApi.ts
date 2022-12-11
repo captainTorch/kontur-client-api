@@ -148,40 +148,6 @@ export class ClientApi extends Api {
     }
 
     /**
-     * Создает новый аккаунт клиента
-     * По умалчанию не привязывает его к системе Контур
-     *
-     * @param {SignUpParams} params Параметры запроса
-     * @returns {Promise<Client>} Созданный аккаунт
-     */
-    signUp (params: SignUpParams): Promise<Client> {
-        return this.post('/sign-up', params) as Promise<Client>
-    }
-
-    /**
-     * Создает новый аккаунт клиента, импортируя данные из аккаунта в системе Контур
-     * Найденный аккаунт Контур будет автоматически привязан к аккаунту клиента
-     *
-     * @param {SignUpWithCardParams} params Параметры запроса
-     * @returns {Promise<Client>} Созданный аккаунт
-     */
-    signUpWithCard (params: SignUpWithCardParams): Promise<Client> {
-        return this.post('/sign-up-with-card', params) as Promise<Client>
-    }
-
-    /**
-     * При успешной авторизации открывает сессию и возвращает объект с информацией о клиенте
-     *
-     * @param {string} username Email, номер телефона или логин
-     * @param {string} password Пароль
-     * @returns {Promise<Client>} Авторизованный клиент
-     */
-    async authWithPassword (username: string, password: string): Promise<Client> {
-        const token = await this.post('/auth', {username, password}) as AccessTokenResponse;
-        return this.setTokenAndGetAuthorized(token);
-    }
-
-    /**
      * При совпадении ранее высланного на номер кода (см. {@link ClientApi#getAuthCode}) открывает сессию
      * В случае, если аккаунта с данным номером телефона еще нет в базе, создает новый аккаунт
      *
@@ -201,7 +167,6 @@ export class ClientApi extends Api {
     getAuthorized (): Promise<Client> {
         return this.get('/authorized') as Promise<Client>
     }
-
     
     /**
      * Позволяет изменить данные о клиенте в системе
@@ -220,6 +185,16 @@ export class ClientApi extends Api {
      */
     getAccounts (): Promise<KonturAccount[]> {
         return this.get('/accounts') as Promise<KonturAccount[]>
+    }
+
+    /**
+     * Привязывает существующий аккаунт Контура к аккаунту клиента
+     *
+     * @param {AttachAccountParams} params Номер и имя карты
+     * @returns {Promise<void>}
+     */
+    attachAccount (params: AttachAccountParams): Promise<unknown> {
+        return this.post('/accounts/attach', params) as Promise<unknown>
     }
 
     /**
@@ -249,16 +224,6 @@ export class ClientApi extends Api {
     }
 
     /**
-     * Привязывает существующий аккаунт Контура к аккаунту клиента
-     *
-     * @param {AttachAccountParams} params Номер и имя карты
-     * @returns {Promise<void>}
-     */
-    attachAccount (params: AttachAccountParams): Promise<unknown> {
-        return this.post('/accounts/attach', params) as Promise<unknown>
-    }
-
-    /**
      * Завершает сессию пользователя
      */
     logOut (): void {
@@ -281,7 +246,7 @@ export class ClientApi extends Api {
      *
      * @returns {StoredPhoneCode[]} Сохраненные данные
      */
-    public getSentCodes(): StoredPhoneCode[] {
+    getSentCodes(): StoredPhoneCode[] {
         try {
             return JSON.parse(localStorage.getItem(LOCAL_STORAGE_PHONES_KEY) as string) || []
         } catch (e) {
@@ -314,5 +279,42 @@ export class ClientApi extends Api {
      */
     private saveSentCodes(phones: StoredPhoneCode[]): void {
         localStorage.setItem(LOCAL_STORAGE_PHONES_KEY, JSON.stringify(phones));
+    }
+
+    // TODO НЕ ТЕСТИРОВАЛОСЬ. ПРОВЕРИТЬ И ОБНОВИТЬ
+    /**
+     * Создает новый аккаунт клиента
+     * По умалчанию не привязывает его к системе Контур
+     *
+     * @param {SignUpParams} params Параметры запроса
+     * @returns {Promise<Client>} Созданный аккаунт
+     */
+    signUp (params: SignUpParams): Promise<Client> {
+        return this.post('/sign-up', params) as Promise<Client>
+    }
+
+    // TODO НЕ ТЕСТИРОВАЛОСЬ. ПРОВЕРИТЬ И ОБНОВИТЬ
+    /**
+     * Создает новый аккаунт клиента, импортируя данные из аккаунта в системе Контур
+     * Найденный аккаунт Контур будет автоматически привязан к аккаунту клиента
+     *
+     * @param {SignUpWithCardParams} params Параметры запроса
+     * @returns {Promise<Client>} Созданный аккаунт
+     */
+    signUpWithCard (params: SignUpWithCardParams): Promise<Client> {
+        return this.post('/sign-up-with-card', params) as Promise<Client>
+    }
+
+    // TODO НЕ ТЕСТИРОВАЛОСЬ. ПРОВЕРИТЬ И ОБНОВИТЬ
+    /**
+     * При успешной авторизации открывает сессию и возвращает объект с информацией о клиенте
+     *
+     * @param {string} username Email, номер телефона или логин
+     * @param {string} password Пароль
+     * @returns {Promise<Client>} Авторизованный клиент
+     */
+    async authWithPassword (username: string, password: string): Promise<Client> {
+        const token = await this.post('/auth', {username, password}) as AccessTokenResponse;
+        return this.setTokenAndGetAuthorized(token);
     }
 }
