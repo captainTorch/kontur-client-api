@@ -5,7 +5,7 @@ import { Category } from '../types'
  * Содержит методы для получения информации об услугах, предлагаемых клиенту
  */
 export class ServicesApi extends Api {
-  prefix = '/services'
+  path = '/services'
 
   /**
    * @param {number} rootCategoryId id корневой категории

@@ -22,7 +22,7 @@ export type PaymentFormRequestResponse = {
  * Содержит методы для пополнения карт и получения информации о платежах
  */
 export class PaymentApi extends Api {
-  prefix = '/payment';
+  path = '/payment';
 
   /**
    * Пополняет карту клиента на указанную сумму (в рублях)
