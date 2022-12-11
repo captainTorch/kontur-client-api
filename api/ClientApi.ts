@@ -1,6 +1,6 @@
 import { Api } from './Api'
 import { Client, Gender, KonturAccount } from "../types";
-import { PaymentResponse } from "./PaymentApi";
+import { PaymentFormRequestResponse } from "./PaymentApi";
 
 /**
  * Параметры запроса для {@link ClientApi#signUp | создания клиента}
@@ -239,13 +239,13 @@ export class ClientApi extends Api {
      *
      * @param {CreateRefilledAccountParams} params Параметры запроса
      * @param {string} paymentGateId Идентификатор платежного шлюза
-     * @returns {Promise<PaymentResponse>} URL для перенаправления на оплату
+     * @returns {Promise<PaymentFormRequestResponse>} URL для перенаправления на оплату
      */
     createRefilledAccount (
       params: CreateRefilledAccountParams,
       paymentGateId: string
-    ): Promise<PaymentResponse> {
-        return this.post(`/accounts/create-refilled/${paymentGateId}`, params) as Promise<PaymentResponse>
+    ): Promise<PaymentFormRequestResponse> {
+        return this.post(`/accounts/create-refilled/${paymentGateId}`, params) as Promise<PaymentFormRequestResponse>
     }
 
     /**

@@ -1,14 +1,14 @@
 import { Api } from './Api'
 import { KonturAccountTransaction } from "../types";
 
-export type PaymentParams = {
+export type PaymentFormRequestParams = {
   amount: number,
   currency: string,
   accountId: string
   callbackUrl: string
 }
 
-export type PaymentResponse = {
+export type PaymentFormRequestResponse = {
   url: string
 }
 
@@ -21,12 +21,12 @@ export class PaymentApi extends Api {
   /**
    * Пополняет карту клиента на указанную сумму (в рублях)
    *
-   * @param {PaymentParams} params данные о карте и платеже
+   * @param {PaymentFormRequestParams} params данные о карте и платеже
    * @param {string} paymentGateId ID платежного шлюза
-   * @returns {Promise<PaymentResponse>} URL для перенаправления на платежный шлюз
+   * @returns {Promise<PaymentFormRequestResponse>} URL для перенаправления на платежный шлюз
    */
-  requestPaymentForm (params: PaymentParams, paymentGateId: string): Promise<PaymentResponse> {
-      return this.post(`/request-payment-form/${paymentGateId}`, params) as Promise<PaymentResponse>
+  requestPaymentForm (params: PaymentFormRequestParams, paymentGateId: string): Promise<PaymentFormRequestResponse> {
+      return this.post(`/request-payment-form/${paymentGateId}`, params) as Promise<PaymentFormRequestResponse>
   }
 
   /**
