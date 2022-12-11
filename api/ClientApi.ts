@@ -1,7 +1,8 @@
 import { Api } from "./Api";
-import { Client, KonturAccount } from "../types";
+import { Client, KonturAccount, TransactionStatus } from "../types";
 import { PaymentFormRequestResponse } from "./PaymentApi";
 import { AuthApi } from "./AuthApi";
+import { io, Socket } from "socket.io-client";
 
 export type CreateAccountParams = {
     name: string,
@@ -23,6 +24,12 @@ export type AccountResponse = {
     accountId: string
 }
 
+export type ServerToClientEvents = {
+    transactionEvent: (transactionId: string, status: TransactionStatus) => void
+}
+
+export type ClientToServerEvents = Record<string, never>
+
 /**
  * Содержит методы для получения и обновления информации о клиенте
  */
@@ -30,6 +37,10 @@ export class ClientApi extends Api {
     path = '/client';
 
     auth: AuthApi<Client> = new AuthApi(this.host, '/client/auth')
+    socket: Socket<ServerToClientEvents, ClientToServerEvents> = io(
+      this.host + '/client',
+      { transports: ['websocket', 'pooling'] }
+    )
 
     /**
      * Позволяет определить, существует ли аккаунт, привязанный к данному номеру
