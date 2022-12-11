@@ -109,7 +109,7 @@ const LOCAL_STORAGE_PHONES_KEY = 'checkedPhones';
  * Содержит методы для получения и обновления информации о клиенте
  */
 export class ClientApi extends Api {
-    module = '/client';
+    prefix = '/client';
 
     /**
      * Позволяет определить, существует ли аккаунт, привязанный к данному номеру

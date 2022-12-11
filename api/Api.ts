@@ -2,7 +2,7 @@
  * Базовый класс для всех сервисов API
  */
 export abstract class Api {
-  protected abstract module: string;
+  protected abstract prefix: string;
 
   /**
    * @param {string} host URL сервера с экземпляром kontur-client
@@ -29,7 +29,7 @@ export abstract class Api {
           headers,
           body: JSON.stringify(body)
       }
-      const request = new Request(this.host + this.module + path, init)
+      const request = new Request(this.host + this.prefix + path, init)
       const response = await fetch(request)
       if (response.ok) return response.json()
       throw new Error(response.status.toString())

@@ -5,7 +5,7 @@ import { LoyaltyProgramRule } from "../types";
  *
  */
 export class LoyaltyProgramApi extends Api {
-  protected module = '/loyalty';
+  protected prefix = '/loyalty';
 
   /**
    * Возвращает настроенные правила начисления бонусной валюты
