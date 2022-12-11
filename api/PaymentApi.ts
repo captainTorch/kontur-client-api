@@ -1,6 +1,12 @@
 import { Api } from './Api'
 import { KonturAccountTransaction } from "../types";
 
+export const enum PaymentCommand {
+  INITIALIZE = 'initialize',
+  CONFIRM = 'confirm',
+  ABORT = 'abort'
+}
+
 export type PaymentFormRequestParams = {
   amount: number,
   currency: string,
