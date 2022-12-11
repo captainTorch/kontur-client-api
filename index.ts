@@ -20,7 +20,7 @@ export default class {
   /**
    * @param {string} host URL экземпляра kontur-client
    */
-  constructor(host: string) {
+  constructor(public readonly host: string) {
     this.clientService = new ClientApi(host)
     this.paymentService = new PaymentApi(host)
     this.servicesService = new ServicesApi(host)
