@@ -78,8 +78,8 @@ export class ClientApi extends Api {
         }
         this.socket = io(
           this.host + '/client', {
-              transports: ['polling', 'websocket'],
-              extraHeaders: { Authorization: `Bearer ${this.token}` }
+              transports: ['websocket', 'polling'],
+              query: { token: this.token }
           }
         )
     }
