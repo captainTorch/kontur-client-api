@@ -36,11 +36,53 @@ export type ClientToServerEvents = Record<string, never>
 export class ClientApi extends Api {
     path = '/client';
 
-    auth: AuthApi<Client> = new AuthApi(this.host, '/client/auth')
-    socket: Socket<ServerToClientEvents, ClientToServerEvents> = io(
-      this.host + '/client',
-      { transports: ['websocket', 'pooling'] }
+    auth: AuthApi<Client> = new AuthApi(
+      this.host, 
+      '/client/auth',
+      () => this.connectEventBus(),
+      () => this.disconnectEventBus()
     )
+    socket: Socket<ServerToClientEvents, ClientToServerEvents> | null = null;
+
+    /**
+     * @param {string} host URL сервера с экземпляром kontur-client
+     */
+    constructor(host: string) {
+        super(host);
+        if (this.token) this.connectEventBus();
+    }
+
+    /**
+     * @internal
+     * @returns {string | null} Bearer токен, хранящийся в localStorage
+     */
+    private get token (): string | null {
+        return localStorage.getItem('accessToken');
+    }
+
+    /**
+     * @internal
+     */
+    private connectEventBus () {
+        if (!this.token) {
+            console.error('Unable to connect to event bus, no bearer token stored')
+            return
+        }
+        this.socket = io(
+          this.host + '/client', {
+              transports: ['polling', 'websocket'],
+              extraHeaders: { Authorization: `Bearer ${this.token}` }
+          }
+        )
+    }
+    
+    /**
+     * @internal
+     */
+    private disconnectEventBus () {
+        this.socket?.close();
+        this.socket = null;
+    }
 
     /**
      * Позволяет определить, существует ли аккаунт, привязанный к данному номеру

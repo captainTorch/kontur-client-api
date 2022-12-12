@@ -35,14 +35,6 @@ export type StoredPhoneCode = {
   timestamp: number
 }
 
-type ServerToClientEvents = {
-  'authorized': () => void,
-  'loggedOut': () => void,
-  'phoneTimeout': (phone: number, timeout: number) => void
-}
-
-type ClientToServerEvents = Record<string, never>
-
 /**
  * Базовый класс, содержащий методы для авторизации разных ролей пользователей в системе
  */
@@ -51,12 +43,17 @@ export class AuthApi<T extends User> extends Api {
   /**
    * @param {string} host URL сервера с экземпляром kontur-client
    * @param {string} path endpoint
+   * @param {(user: User) => void} onAuthorized Необязательный параметр. Позволяет родительскому классу установить обработчик входа в систему
+   * @param {() => void} onLoggedOut Необязательный параметр. Позволяет родительскому классу установить обработчик события выхода из системы.
    */
-  constructor(host: string, protected path: string) {
+  constructor(
+    protected host: string,
+    protected path: string,
+    private onAuthorized?: (user: T) => void,
+    private onLoggedOut?: () => void
+  ) {
     super(host);
   }
-
-  //private socket: Socket<ServerToClientEvents, ClientToServerEvents> = io(this.host + '/auth');
 
   /**
    * При наличии сессии на сервере возвращает авторизованного пользователя
@@ -100,28 +97,8 @@ export class AuthApi<T extends User> extends Api {
    */
   public logout (): void {
     localStorage.removeItem('accessToken');
+    if (this.onLoggedOut) this.onLoggedOut();
   }
-
-  // /**
-  //  * @param {(user: User) => any} listener Обработчик события входа в систему
-  //  */
-  // public onUserAuthorized (listener: (user: T) => void) {
-  //   this.socket.once('authorized', async () => listener(await this.getUser()))
-  // }
-  //
-  // /**
-  //  * @param {() => any | void} listener Обработчик события выхода из системы
-  //  */
-  // public onUserLoggedOut (listener: () => void) {
-  //   this.socket.once('loggedOut', listener)
-  // }
-  //
-  // /**
-  //  * @param {(phone: number, timeout: number) => void} listener Обработчик для таймера ожидания запроса кода
-  //  */
-  // public onPhoneTimeout (listener: (phone: number, timeout: number) => void) {
-  //   this.socket.once('phoneTimeout', listener)
-  // }
 
   /**
    * @internal
@@ -130,7 +107,9 @@ export class AuthApi<T extends User> extends Api {
    */
   private async setTokenAndGetAuthorized({ accessToken }: AccessTokenResponse): Promise<T> {
     localStorage.setItem('accessToken', accessToken);
-    return this.getUser();
+    const user = await this.getUser();
+    if (this.onAuthorized) this.onAuthorized(user);
+    return user;
   }
 
   /**
