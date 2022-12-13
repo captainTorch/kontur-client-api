@@ -30,9 +30,21 @@ export abstract class Api {
           body: JSON.stringify(body)
       }
       const request = new Request(this.host + this.path + path, init)
-      const response = await fetch(request)
-      if (response.ok) return response.json()
-      throw new Error(response.status.toString())
+      let response;
+      try {
+        response = await fetch(request)
+      } catch (e) {
+        throw new Error('NETWORK_ERROR')
+      }
+      try {
+        response = await response.json()
+      } catch (e) {
+        throw new Error('PARSE_RESPONSE_ERROR')
+      }
+      if ((response as Record<string, unknown>).error) {
+        throw new Error(response.error)
+      }
+      throw new Error('UNKNOWN_ERROR')
   }
 
   /**

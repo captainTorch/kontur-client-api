@@ -1,5 +1,6 @@
 import { Api } from "./Api";
 import { Client, User } from "../types";
+import { ApiError } from "../error";
 
 /**
  * Параметры запроса для {@link AuthApi#useCode}
@@ -36,6 +37,12 @@ export type StoredPhoneCode = {
 }
 
 /**
+ *
+ */
+@ApiError('NOT_AUTHENTICATED_ERROR')
+export class NotAuthenticatedError {}
+
+/**
  * Базовый класс, содержащий методы для авторизации разных ролей пользователей в системе
  */
 export class AuthApi<T extends User> extends Api {
@@ -60,8 +67,8 @@ export class AuthApi<T extends User> extends Api {
    *
    * @returns {Promise<User>} Авторизованный пользователь
    */
-  public getUser (): Promise<T> {
-    return this.get('/') as Promise<T>
+  public getUser (): Promise<T | null> {
+    return this.get('') as Promise<T | null>
   }
 
   /**
@@ -87,7 +94,7 @@ export class AuthApi<T extends User> extends Api {
    * @param {UseCodeParams} params Номер телефона и код
    * @returns {Promise<Client>} Авторизованный клиент
    */
-  public async useCode (params: UseCodeParams): Promise<T> {
+  public async useCode (params: UseCodeParams): Promise<T | null> {
     const token = await this.post('/use-code', params) as AccessTokenResponse
     return this.setTokenAndGetAuthorized(token);
   }
@@ -105,11 +112,15 @@ export class AuthApi<T extends User> extends Api {
    * @param {AccessTokenResponse} params Ответ на запрос авторизации
    * @returns {Promise<Client>} Авторизованный пользователь
    */
-  private async setTokenAndGetAuthorized({ accessToken }: AccessTokenResponse): Promise<T> {
+  private async setTokenAndGetAuthorized({ accessToken }: AccessTokenResponse): Promise<T | null> {
     localStorage.setItem('accessToken', accessToken);
     const user = await this.getUser();
-    if (this.onAuthorized) this.onAuthorized(user);
-    return user;
+    if (user) {
+      if (this.onAuthorized) this.onAuthorized(user);
+      return user;
+    } else {
+      return null;
+    }
   }
 
   /**

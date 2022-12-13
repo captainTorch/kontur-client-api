@@ -57,31 +57,39 @@ export class ClientApi extends Api {
      */
     constructor(host: string) {
         super(host);
-        if (this.token) this.connectEventBus();
-    }
-
-    /**
-     * @internal
-     * @returns {string | null} Bearer токен, хранящийся в localStorage
-     */
-    private get token (): string | null {
-        return localStorage.getItem('accessToken');
+        this.connectEventBus();
     }
 
     /**
      * @internal
      */
-    private connectEventBus () {
-        if (!this.token) {
-            console.error('Unable to connect to event bus, no bearer token stored')
-            return
+    private async connectEventBus () {
+        const token = localStorage.getItem('accessToken');
+        if (!token) {
+            console.warn('Unable to connect to event bus: no bearer token stored');
+            return;
+        }
+        let userIsAuthenticated;
+        try {
+            userIsAuthenticated = await this.auth.getUser() != null;
+        } catch (e) {
+            userIsAuthenticated = false;
+        }
+        if (!userIsAuthenticated) {
+            console.warn('Unable to connect to event bus: attempt to get authenticated user failed')
+            return;
         }
         this.socket = io(
           this.host + '/client', {
               transports: ['websocket', 'polling'],
-              query: { token: this.token }
+              query: { token },
+              reconnectionAttempts: 5
           }
-        )
+        ).on('disconnect', () => {
+            this.socket = null
+        }).on('reconnect_failed', () => {
+            this.socket = null
+        })
     }
     
     /**
