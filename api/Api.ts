@@ -36,6 +36,16 @@ export abstract class Api {
       } catch (e) {
         throw new Error('NETWORK_ERROR')
       }
+      if (!response.ok) {
+        /* TODO
+            Вот этот момент надо продумать. Если использовать http коды, можно проебаться -
+            непонятно будет, пришел ответ 401, например, от сервера контур-клиента или до него
+            запрос даже не дошел и это отработал nginx. По-хорошему, любой код кроме 200
+            должен расцениваться как ошибка.
+            На стороне сервера это можно реализовать так https://docs.nestjs.com/exception-filters
+         */
+        throw new Error(`HTTP_ERROR_${response.status.toString()}`)
+      }
       try {
         response = await response.json()
       } catch (e) {
@@ -44,7 +54,7 @@ export abstract class Api {
       if ((response as Record<string, unknown>).error) {
         throw new Error(response.error)
       }
-      throw new Error('UNKNOWN_ERROR')
+      return response
   }
 
   /**

@@ -79,10 +79,10 @@ export class AuthApi<T extends User> extends Api {
    * @returns {Promise<number>} Время жизни кода в секундах
    */
   public async getCode (params: GetCodeParams): Promise<StoredPhoneCode> {
-    const existing = this.getSentCodes().find(v => v.phone === params.phone);
-    if (existing) {
-      throw new Error(`Please, wait for ${existing.timeout} secs to send code again`);
-    }
+    // const existing = this.getSentCodes().find(v => v.phone === params.phone);
+    // if (existing) {
+    //   throw new Error(`Please, wait for ${existing.timeout} secs to send code again`);
+    // }
     const timeout = await this.post('/get-code', params) as number;
     return this.setCodeSent(params.phone, timeout);
   }
