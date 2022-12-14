@@ -1,7 +1,7 @@
 import { TransactionStatus } from "./TransactionStatus";
 
 export type KonturAccountTransaction = {
-  id?: string,
+  id?: number,
   konturId?: string,
   paymentGateId?: string,
 
