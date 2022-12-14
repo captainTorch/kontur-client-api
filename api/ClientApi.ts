@@ -24,12 +24,14 @@ export type AccountResponse = {
     accountId: string
 }
 
+type BonusAccountRefilledEventListener = (payload: { amount: number }) => void;
 type RefillSuccessfulEventListener = (payload: { accountId: string, amount: number }) => void;
 type RefillFailedPaymentGateListener = (payload: { accountId: string, transactionId: string }) => void;
 type RefillFailedKonturListener = (payload: { accountId: string, paymentGateId: string, transactionId: string }) => void;
 type TransactionStatusChangedEventListener = (payload: { transactionId: string, transactionStatus: TransactionStatus }) => void;
 
 export type ServerToClientEvents = {
+    'bonus-account-refilled': (event: string) => void,
     'refill-successful': (event: string) => void,
     'refill-failed-kontur': (event: string) => void,
     'refill-failed-payment-gate': (event: string) => void,
@@ -116,7 +118,7 @@ export class ClientApi extends Api {
 
     /**
      *
-     * @param {TransactionStatusChangedEventListener} listener Обработчик события пополнения аккаунта
+     * @param {TransactionStatusChangedEventListener} listener Обработчик события пополнения счета
      */
     public onRefillSuccessful (listener: RefillSuccessfulEventListener) {
         this.socket?.on('refill-successful', payload => listener(JSON.parse(payload)))
@@ -124,7 +126,7 @@ export class ClientApi extends Api {
 
     /**
      *
-     * @param {TransactionStatusChangedEventListener} listener Обработчик события пополнения аккаунта
+     * @param {TransactionStatusChangedEventListener} listener Обработчик события пополнения счета
      */
     public onRefillFailedPaymentGate (listener: RefillFailedPaymentGateListener) {
         this.socket?.on('refill-failed-payment-gate', payload => listener(JSON.parse(payload)))
@@ -132,12 +134,18 @@ export class ClientApi extends Api {
 
     /**
      *
-     * @param {TransactionStatusChangedEventListener} listener Обработчик события пополнения аккаунта
+     * @param {TransactionStatusChangedEventListener} listener Обработчик события пополнения счета
      */
     public onRefillFailedKontur (listener: RefillFailedKonturListener) {
         this.socket?.on('refill-failed-kontur', payload => listener(JSON.parse(payload)))
     }
 
+    /**
+     * @param {BonusAccountRefilledEventListener} listener Обработчик события пополнения бонусного счета
+     */
+    public onBonusAccountRefill (listener: BonusAccountRefilledEventListener) {
+        this.socket?.on('bonus-account-refilled', payload => listener(JSON.parse(payload)))
+    }
 
     /**
      * @internal
