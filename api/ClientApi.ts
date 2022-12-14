@@ -79,8 +79,22 @@ export class ClientApi extends Api {
             console.warn('Unable to connect to event bus: attempt to get authenticated user failed')
             return;
         }
+
+        // TODO вынести этот парсинг куда-нибудь выше в структуре
+        // TODO добавить возможность вешать WS не только на корень, вдруг понадобится использовать /events
+
+        // eslint-disable-next-line
+        const hostParseRegex = /(?<scheme>https?:\/\/)(?<hostname>[a-zA-Z0-9-.]+):?(?<port>[0-9]+)?\/?(?<path>\S+)?/;
+        const groups = hostParseRegex.exec(this.host)?.groups;
+
+        const scheme = groups?.scheme || '';
+        const hostname = groups?.hostname || '';
+        const port = groups?.port ? `:${groups.port}` : '';
+        const path = groups?.path ? `/${groups.path}` : '';
+
         this.socket = io(
-          this.host + '/client', {
+          `${scheme}${hostname}${port}` + '/client', {
+              path: '/events/',
               transports: ['websocket', 'polling'],
               query: { token },
               reconnectionAttempts: 5
