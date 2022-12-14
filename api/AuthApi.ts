@@ -68,7 +68,7 @@ export class AuthApi<T extends User> extends Api {
    * @returns {Promise<User>} Авторизованный пользователь
    */
   public getUser (): Promise<T | null> {
-    return this.get('') as Promise<T | null>
+    return this.get('/') as Promise<T | null>
   }
 
   /**
