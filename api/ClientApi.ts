@@ -101,11 +101,7 @@ export class ClientApi extends Api {
               query: { token },
               reconnectionAttempts: 5
           }
-        ).on('disconnect', () => {
-            this.socket = null
-        }).on('reconnect_failed', () => {
-            this.socket = null
-        })
+        )
     }
     
     /**
